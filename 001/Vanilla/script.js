@@ -70,6 +70,6 @@ function isWinner(selection, opponentSelection) {
 
 // 電腦隨機出拳
 function randomSelection() {
-  const ramdomIndex = Math.floor(Math.random() * SELECTIONS.length)
-  return SELECTIONS[ramdomIndex]
+  const randomIndex = Math.floor(Math.random() * SELECTIONS.length)
+  return SELECTIONS[randomIndex]
 }
