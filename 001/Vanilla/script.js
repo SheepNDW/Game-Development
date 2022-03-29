@@ -23,7 +23,7 @@ const SELECTIONS = [
 selectionButtons.forEach(button => {
   button.addEventListener('click', (e) => {
     const selectionName = button.dataset.selection
-    const selection = SELECTIONS.find(selction => selction.name === selectionName)
+    const selection = SELECTIONS.find(selection => selection.name === selectionName)
     makeSelection(selection)
   })
 })
@@ -52,12 +52,12 @@ function incrementScore(scoreSpan) {
 
 /**
  * 添加結果到畫面上
- * @param {Object} selction - 打出的拳
+ * @param {Object} selection - 打出的拳
  * @param {Boolean} winner - 是否獲勝
  */
-function addSelectionResult(selction, winner) {
+function addSelectionResult(selection, winner) {
   const div = document.createElement('div')
-  div.innerText = selction.emoji
+  div.innerText = selection.emoji
   div.classList.add('result-selection')
   if (winner) div.classList.add('winner')
   finalColumn.after(div)
