@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>001 - Rock paper scissors (Vue ver.)</title>
+  <link rel="stylesheet" href="../Vanilla/styles.css">
+  <script src="app.js" type="module" defer></script>
+
+  <style>
+    body {
+      background-color: #3FB17F;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="selections">
+      <button type="button" class="selection" v-for="item in SELECTIONS" :key="item.name" @click="makeSelection(item)">
+        {{ item.emoji }}
+      </button>
+    </div>
+    <div class="results">
+      <div>
+        You
+        <span class="result-score">{{ yourScore }}</span>
+      </div>
+      <div>
+        Computer
+        <span class="result-score">{{ computerScore }}</span>
+      </div>
+      <div class="result-selection" :class="{winner: result?.winner}" v-for="(result) in results" :key="result.id">
+        {{ result.emoji }}
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
