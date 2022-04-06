@@ -13,7 +13,7 @@
     <div id="app">
       <div class="board" :class="[isXTurn ? 'x' : 'circle']">
         <div
-          ref="cellRefs"
+          :ref="setCellRefs"
           class="cell"
           v-for="cell in cells"
           :key="cell.key"

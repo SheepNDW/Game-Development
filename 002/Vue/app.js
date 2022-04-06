@@ -1,4 +1,4 @@
-import { createApp, ref, getCurrentInstance } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.31/vue.esm-browser.min.js'
+import { createApp, ref, onBeforeUpdate } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.31/vue.esm-browser.min.js'
 
 const X_CLASS = 'x'
 const CIRCLE_CLASS = 'circle'
@@ -19,6 +19,13 @@ const app = createApp({
     const isShowRestart = ref(false)
     const winningMessageText = ref('')
 
+    const { cells, reRenderCells } = initGame()
+    const startGame = () => {
+      isShowRestart.value = false
+      isXTurn.value = true
+      reRenderCells()
+    }
+
     const handleClick = (e) => {
       const cell = e.target
       const currentClass = isXTurn.value ? X_CLASS : CIRCLE_CLASS
@@ -32,30 +39,18 @@ const app = createApp({
       }
     }
 
+    // 落子
     const placeMark = (cell, currentClass) => {
       cell.classList.add(currentClass)
     }
+    // 換邊
     const swapTurns = () => {
       isXTurn.value = !isXTurn.value
     }
-
     // 檢查是否勝利
-    // const cellRefs = ref([])
-    const { ctx } = getCurrentInstance()
-    const checkWin = (currentClass) => {
-      return WINNING_COMBINATIONS.some(combination => {
-        return combination.every(index => {
-          return ctx.$refs.cellRefs[index].classList.contains(currentClass)
-        })
-      })
-    }
-    const isDraw = () => {
-      return ctx.$refs.cellRefs.every(cell => {
-        return cell.classList.contains(X_CLASS) || cell.classList.contains(CIRCLE_CLASS)
-      })
-    }
+    const { setCellRefs, checkWin, isDraw } = useCheckWin()
 
-    // 結束遊戲
+
     const endGame = (draw) => {
       if (draw) {
         winningMessageText.value = '和局!'
@@ -65,19 +60,12 @@ const app = createApp({
       isShowRestart.value = true
     }
 
-    const { cells, reRenderCells } = initGame()
-    const startGame = () => {
-      reRenderCells()
-      isShowRestart.value = false
-      isXTurn.value = true
-    }
-
     return {
       isXTurn,
       isShowRestart,
       winningMessageText,
-      // cellRefs,
       cells,
+      setCellRefs,
       handleClick,
       startGame
     }
@@ -105,6 +93,33 @@ const initGame = () => {
   return {
     cells,
     reRenderCells
+  }
+}
+
+const useCheckWin = () => {
+  let cellRefs = []
+  const setCellRefs = (el) => {
+    if (el) cellRefs.push(el)
+  }
+  onBeforeUpdate(() => cellRefs = [])
+
+  const checkWin = (currentClass) => {
+    return WINNING_COMBINATIONS.some(combination => {
+      return combination.every(index => {
+        return cellRefs[index].classList.contains(currentClass)
+      })
+    })
+  }
+  const isDraw = () => {
+    return cellRefs.every(cell => {
+      return cell.classList.contains(X_CLASS) || cell.classList.contains(CIRCLE_CLASS)
+    })
+  }
+
+  return {
+    setCellRefs,
+    checkWin,
+    isDraw
   }
 }
 
